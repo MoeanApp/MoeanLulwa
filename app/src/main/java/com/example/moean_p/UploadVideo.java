@@ -8,36 +8,57 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Debug;
 import android.provider.MediaStore;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 
-public class UploadVideo extends AppCompatActivity implements View.OnClickListener{
+public class UploadVideo extends AppCompatActivity {
 
-    private static final int PICK_VIDEO_REQUEST = 234;
-    private Button cancel, choose, upload;
+    private Button cancel, share, upload;
     private VideoView video;
+    private EditText filename;
+    private TextView name;
+    private ProgressBar progressBar;
     private DrawerLayout drawer;
-    private Uri filepath;
     private StorageReference storageReference;
+    private Uri videoUrl;
+    private DatabaseReference databaseReference;
+    Button previous;
+
+    private static final int VideoBack = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_video);
+
 
         Toolbar toolbar = findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
@@ -52,98 +73,85 @@ public class UploadVideo extends AppCompatActivity implements View.OnClickListen
         toggle2.syncState();
 
         cancel = findViewById(R.id.cancel);
-        choose = findViewById(R.id.choose);
-        upload = findViewById(R.id.share);
+        share = findViewById(R.id.share);
+        upload = findViewById(R.id.upload);
 
-        cancel.setOnClickListener(this);
-        choose.setOnClickListener(this);
-        upload.setOnClickListener(this);
+        video = findViewById(R.id.video);
+        filename = findViewById(R.id.title);
+        name = findViewById(R.id.name);
 
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        storageReference = storage.getReference();
+        storageReference=FirebaseStorage.getInstance().getReference("uploads");
+        databaseReference=FirebaseDatabase.getInstance().getReference("uploads");
 
+        progressBar = findViewById(R.id.progress_bar);
 
-
-    }
-    public void onBackPressed() {
-
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-
-        }
-    }
-    public void showFileChooser() {
-        Intent intent = new Intent();
-        intent.setType("video/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "أختر فديو"), PICK_VIDEO_REQUEST);
-    }
-    public void onClick(View v) {
-        if (v == cancel) {
-            //cancel the proccess
-
-
-        } else if (v == choose) {
-            //choose the video
-            showFileChooser();
-
-        } else if (v == upload) {
-            //upload to firebase
-            UploadFile();
-        }
-
-    }
-    public void selectVideo() {
-        Intent intent = new Intent();
-        intent.setType("video/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Image from here..."),
-                PICK_VIDEO_REQUEST);
-
-
-    }
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_VIDEO_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            filepath = data.getData();
-            try {
-
-                // Setting image on image view using Bitmap
-                Bitmap bitmap = MediaStore
-                        .Images
-                        .Media
-                        .getBitmap(
-                                getContentResolver(),
-                                filepath);
-                video.setVideoURI(filepath);
-            }
-
-            catch (IOException e) {
-                // Log the exception
-                e.printStackTrace();
-            }
-        }
-    }
-    private void UploadFile(){
-
-        StorageReference stRef = storageReference.child("videos/vvv.mp4");
-        UploadTask ut = stRef.putFile(filepath);
-
-        ut.addOnFailureListener(new OnFailureListener() {
+        upload.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onFailure(@NonNull Exception exception) {
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+            public void onClick(View v) {
+                UploadsFile();
 
-                Uri downloadUrl = taskSnapshot.getUploadSessionUri();
+
+
+
+            }
+        });
+
+        share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
 
 
+        name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
     }
 
+    private void openFileChooser() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("video/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, VideoBack);
+
+    }
+
+
+    public void previous(View view) {
+        Intent intent2 = new Intent(this, Videos.class);
+        startActivity(intent2);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==VideoBack && resultCode==RESULT_OK
+        && data !=null && data.getData()!=null){
+            videoUrl=data.getData();
+            video.setVideoURI(videoUrl);
+        }
+    }
+
+    private String getFileEctention(Uri uri){
+        ContentResolver CR=getContentResolver();
+        MimeTypeMap mimeTypeMap=MimeTypeMap.getSingleton();
+        return mimeTypeMap.getExtensionFromMimeType(CR.getType(uri));
+    }
+
+    private void UploadsFile(){
+if(videoUrl!=null){
+    StorageReference fileReferance=storageReference.child(System.currentTimeMillis()+
+           "."+ getFileEctention(videoUrl));
+    
+
+}else{
+    Toast.makeText(this,"No file selected",Toast.LENGTH_LONG).show();
+}
+
+    }
 }

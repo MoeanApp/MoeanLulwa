@@ -22,7 +22,10 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder>{
     private static final String TAG = "VideoAdapter";
 
     private ArrayList<String> mImageNames = new ArrayList<>();
+
     private Context mContext;
+
+
 
     public VideoAdapter(Context context, ArrayList<String> ImageNames) {
 
@@ -49,7 +52,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder>{
             public void onClick(View v) {
 
                 Log.d(TAG, "onClick:clicked on:" + mImageNames.get(position));
-                Toast.makeText(mContext, mImageNames.get(position), Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, mImageNames.get(position),Toast.LENGTH_SHORT).show();
             }
         });
 

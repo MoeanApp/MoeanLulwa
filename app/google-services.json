@@ -103,6 +103,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "798248622021-jf15s0runc6l8f790u0vuu4le0cq4504.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.moean_p",
+            "certificate_hash": "bf633d40ce9feef5c1f4ab63f1d5eb2a91133ffe"
+          }
+        },
+        {
           "client_id": "798248622021-lsfnclebg07au7gv322j8vf1bjph4ku4.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

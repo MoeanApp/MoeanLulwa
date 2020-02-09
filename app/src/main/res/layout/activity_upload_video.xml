@@ -8,9 +8,10 @@
     tools:context=".UploadVideo">
 
     <RelativeLayout
-        android:layout_width="match_parent"
         android:id="@+id/layout1"
+        android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <TextView
             android:id="@+id/text2"
             android:layout_width="match_parent"
@@ -36,7 +37,7 @@
             />
 
         <TextView
-            android:id="@+id/title"
+            android:id="@+id/name"
             android:layout_width="140dp"
             android:layout_height="130dp"
             android:layout_alignParentEnd="true"
@@ -48,34 +49,44 @@
 
 
         <EditText
-            android:id="@+id/editText"
+            android:id="@+id/title"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="60dp"
             android:ems="10"
+            android:hint="أدخل عنوان الفديو"
             android:inputType="textPersonName"
             android:paddingTop="80dp"
 
 
             />
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/video" />
+
         <Button
-            android:id="@+id/choose"
+            android:id="@+id/upload"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/video"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="15dp"
             android:background="@drawable/rounded_button"
             android:text="إختر ملف"
             android:textColor="@color/colorPrimary"
 
             />
+
         <Button
             android:id="@+id/share"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/choose"
+            android:layout_below="@+id/upload"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="16dp"
             android:background="@drawable/rounded_button"
@@ -83,18 +94,39 @@
             android:textColor="@color/colorPrimary"
 
             />
+
         <Button
             android:id="@+id/cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/choose"
+            android:layout_below="@+id/upload"
             android:layout_alignParentRight="true"
             android:layout_marginRight="16dp"
             android:background="@drawable/rounded_button"
+            android:onClick="previous"
             android:text="إلغاء"
             android:textColor="@color/colorPrimary"
 
             />
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/tool_bar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimary"
+
+            android:elevation="4dp"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+            <Button
+                android:id="@+id/previous"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="350dp"
+                android:background="@drawable/ic_keyboard_arrow_right_black_24dp"
+                android:onClick="previous" />
+        </androidx.appcompat.widget.Toolbar>
 
 
     </RelativeLayout>
