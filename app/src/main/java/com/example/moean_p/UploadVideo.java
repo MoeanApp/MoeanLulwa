@@ -138,6 +138,7 @@ public class UploadVideo extends AppCompatActivity {
         && data !=null && data.getData()!=null){
             videoUrl=data.getData();
             video.setVideoURI(videoUrl);
+
         }
     }
 
