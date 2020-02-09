@@ -140,6 +140,7 @@ public class UploadVideo extends AppCompatActivity {
             video.setVideoURI(videoUrl);
 
         }
+
     }
 
     private String getFileEctention(Uri uri){
