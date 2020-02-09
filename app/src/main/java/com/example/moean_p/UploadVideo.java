@@ -15,6 +15,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Debug;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.view.View;
 import android.webkit.MimeTypeMap;
@@ -41,7 +42,7 @@ import java.util.HashMap;
 
 public class UploadVideo extends AppCompatActivity {
 
-    private Button cancel, share, upload;
+    private Button cancel, choose, upload;
     private VideoView video;
     private EditText filename;
     private TextView name;
@@ -72,33 +73,35 @@ public class UploadVideo extends AppCompatActivity {
         drawer.addDrawerListener(toggle2);
         toggle2.syncState();
 
-        cancel = findViewById(R.id.cancel);
-        share = findViewById(R.id.share);
+        //cancel = findViewById(R.id.cancel);
         upload = findViewById(R.id.upload);
+        choose = findViewById(R.id.choose);
 
         video = findViewById(R.id.video);
         filename = findViewById(R.id.title);
         name = findViewById(R.id.name);
 
-        storageReference=FirebaseStorage.getInstance().getReference("uploads");
-        databaseReference=FirebaseDatabase.getInstance().getReference("uploads");
+
 
         progressBar = findViewById(R.id.progress_bar);
+
+        storageReference=FirebaseStorage.getInstance().getReference("uploads");
+        databaseReference=FirebaseDatabase.getInstance().getReference("uploads");
 
         upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 UploadsFile();
-
-
 
 
             }
         });
 
-        share.setOnClickListener(new View.OnClickListener() {
+        choose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                openFileChooser();
 
             }
         });
@@ -118,6 +121,7 @@ public class UploadVideo extends AppCompatActivity {
         intent.setType("video/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(intent, VideoBack);
+
 
     }
 
@@ -145,8 +149,44 @@ public class UploadVideo extends AppCompatActivity {
 
     private void UploadsFile(){
 if(videoUrl!=null){
-    StorageReference fileReferance=storageReference.child(System.currentTimeMillis()+
+    StorageReference fileReferance=storageReference.child("uploads/"+System.currentTimeMillis()+
            "."+ getFileEctention(videoUrl));
+    fileReferance.putFile(videoUrl)
+            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Handler handler=new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressBar.setProgress(0);
+                        }
+                    },500);
+                    Toast.makeText(UploadVideo.this,"upload successful",Toast.LENGTH_LONG);
+                    VideoAdapter2 upload=new VideoAdapter2(filename.getText().toString().trim(),
+                            taskSnapshot.getUploadSessionUri().toString());
+                    String uploadId=databaseReference.push().getKey();
+                    databaseReference.child(uploadId).setValue(upload);
+
+
+                }
+            })
+            .addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+
+                    Toast.makeText(UploadVideo.this,e.getMessage(),Toast.LENGTH_SHORT).show();
+
+                }
+            })
+
+            .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
+                    double progress=(100.0 * taskSnapshot.getBytesTransferred()/ taskSnapshot.getTotalByteCount());
+                    progressBar.setProgress((int)progress);
+                }
+            });
     
 
 }else{

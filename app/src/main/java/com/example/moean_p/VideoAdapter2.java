@@ -10,6 +10,9 @@ public class VideoAdapter2 {
     }
 
     public VideoAdapter2(String name, String videoUrl) {
+        if(name.trim().equals("")){
+            name="no name";
+        }
         this.name = name;
         this.videoUrl = videoUrl;
     }
