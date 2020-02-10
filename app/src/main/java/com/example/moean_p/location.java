@@ -1,0 +1,110 @@
+package com.example.moean_p;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.MenuItem;
+import android.widget.Button;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
+
+public class location extends AppCompatActivity {
+
+    private DrawerLayout drawer;
+    ActionBarDrawerToggle toggle;
+    BottomNavigationView bottomNavigationView;
+    NavigationView navigationView;
+    Intent intent2;
+    Button b1;
+
+    private static final String TAG = "activity_location";
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_location);
+        Toolbar toolbar=findViewById(R.id.tool_bar2);
+        setSupportActionBar(toolbar);
+
+        drawer = findViewById(R.id.location_layout);
+
+        toggle=new ActionBarDrawerToggle(this,drawer,toolbar,R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close);
+
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        Log.d(TAG,"onCreate:started");
+
+        navigationView=findViewById(R.id.nav_drawer2);
+
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                if(menuItem.getItemId()==R.id.nav_profile2){
+                    profile();
+                    return true;
+                }else
+                if(menuItem.getItemId()==R.id.nav_consult) {
+                    consult();
+
+                    return true;
+                }
+                else if(menuItem.getItemId()==R.id.nav_who_is_moean2){
+                    Whoismoean();
+                }
+
+
+
+                return false;
+            }
+        });
+
+        bottomNavigationView=findViewById(R.id.bottom2_nav);
+        bottomNavigationView.setOnNavigationItemReselectedListener(new BottomNavigationView.OnNavigationItemReselectedListener() {
+            @Override
+            public void onNavigationItemReselected(@NonNull MenuItem menuItem) {
+                if(menuItem.getItemId()==R.id.nav_location){
+                    Locaion();
+                }
+                if(menuItem.getItemId()==R.id.nav_consult){
+                    consult();
+                }
+            }
+        });
+
+
+
+
+    }
+
+    public void profile(){
+        intent2=new Intent(this,childprofile.class);
+        startActivity(intent2);
+
+    }
+
+    public void consult(){
+        intent2=new Intent(this,Convercation_for_caregiver.class);
+        startActivity(intent2);
+
+    }
+    public void Whoismoean(){
+        intent2=new Intent(this,WhoIsMoeanCaregiver.class);
+        startActivity(intent2);
+
+    }
+
+    public void Locaion(){
+        intent2=new Intent(this,location.class);
+        startActivity(intent2);
+    }
+}

@@ -34,6 +34,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
@@ -51,6 +52,7 @@ public class UploadVideo extends AppCompatActivity {
     private StorageReference storageReference;
     private Uri videoUrl;
     private DatabaseReference databaseReference;
+    private StorageTask mUploadTask;
     Button previous;
 
     private static final int VideoBack = 1;
@@ -91,9 +93,15 @@ public class UploadVideo extends AppCompatActivity {
         upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+if(mUploadTask!=null && mUploadTask.isInProgress()){
 
-                UploadsFile();
+    Toast.makeText(UploadVideo.this,"upload in progress",Toast.LENGTH_SHORT).show();
 
+
+                }else {
+    UploadsFile();
+
+}
 
             }
         });
@@ -153,7 +161,7 @@ public class UploadVideo extends AppCompatActivity {
 if(videoUrl!=null){
     StorageReference fileReferance=storageReference.child("uploads/"+System.currentTimeMillis()+
            "."+ getFileEctention(videoUrl));
-    fileReferance.putFile(videoUrl)
+    mUploadTask=fileReferance.putFile(videoUrl)
             .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {

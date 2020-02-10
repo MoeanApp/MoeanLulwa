@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.moean_p">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -11,12 +11,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".UploadVideo"></activity>
+        <activity android:name=".videoscare"></activity>
+        <activity android:name=".mile" />
+        <activity android:name=".location" />
+        <activity android:name=".Convercation_for_caregiver" />
+        <activity android:name=".childprofile" />
+        <activity android:name=".MainActivity" />
+        <activity android:name=".UploadVideo" />
         <activity android:name=".AdvisorProfile" />
         <activity android:name=".Convercation" />
         <activity android:name=".Videos" />
         <activity
-            android:name=".MainActivity"
+            android:name=".WhoIsMoeanCaregiver"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
