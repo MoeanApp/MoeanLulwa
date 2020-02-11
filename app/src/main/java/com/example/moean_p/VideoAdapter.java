@@ -3,33 +3,41 @@ package com.example.moean_p;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.moean_p.R;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder>{
 
-    private static final String TAG = "VideoAdapter";
 
-    private ArrayList<String> mImageNames = new ArrayList<>();
+    private List<VideoAdapter2> mUploads ;
 
     private Context mContext;
+    private onItemClickListener mListener;
 
 
 
-    public VideoAdapter(Context context, ArrayList<String> ImageNames) {
 
-        mImageNames = ImageNames;
+    public VideoAdapter(Context context, List<VideoAdapter2> uploads) {
+
+        mUploads = uploads;
         mContext = context;
     }
 
@@ -37,47 +45,94 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder>{
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_listitem, parent, false);
-        ViewHolder holder = new ViewHolder(view);
-        return holder;    }
+        View view = LayoutInflater.from(mContext).inflate(R.layout.video_item, parent, false);
+        return new ViewHolder(view);
+    }
 
-    @SuppressLint("LongLogTag")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-        Log.d(TAG, "onBindViewHolder:called");
-        holder.t1.setText(mImageNames.get(position));
-        holder.parentlayout.setOnClickListener(new View.OnClickListener() {
+        VideoAdapter2 uploadCurrent=mUploads.get(position);
+        holder.VideoName.setText(uploadCurrent.getName());
 
-            @Override
-            public void onClick(View v) {
-
-                Log.d(TAG, "onClick:clicked on:" + mImageNames.get(position));
-                Toast.makeText(mContext, mImageNames.get(position),Toast.LENGTH_SHORT).show();
-            }
-        });
 
     }
 
     public int getItemCount() {
-        return mImageNames.size();
+        return mUploads.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
+    , View.OnCreateContextMenuListener , MenuItem.OnMenuItemClickListener {
 
-        //CircleImageView image;
-        TextView t1;
-        RelativeLayout parentlayout;
+      public   TextView VideoName;
+       public  VideoView videoView;
+
 
         public ViewHolder(@NonNull View itemView) {
 
             super(itemView);
 
-            //image=itemView.findViewById(R.id.image);
-            t1 = itemView.findViewById(R.id.image_name);
-            parentlayout = itemView.findViewById(R.id.parent_layout);
+            VideoName=itemView.findViewById(R.id.video_name);
+            videoView=itemView.findViewById(R.id.video_view_upload);
+            itemView.setOnClickListener(this);
+            itemView.setOnCreateContextMenuListener(this);
+
 
 
         }
+
+        @Override
+        public void onClick(View v) {
+            if(mListener!=null){
+                int position=getAdapterPosition();
+                if(position!=RecyclerView.NO_POSITION){
+                    mListener.onItemClick(position);
+                }
+            }
+        }
+
+        @Override
+        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+            menu.setHeaderTitle("select Action");
+            MenuItem doWhatever =menu.add(Menu.NONE,1,1,"Do Whatever");
+            MenuItem delete=menu.add(Menu.NONE,2,2,"Delete");
+
+            doWhatever.setOnMenuItemClickListener(this);
+            delete.setOnMenuItemClickListener(this);
+
+        }
+
+        @Override
+        public boolean onMenuItemClick(MenuItem item) {
+            if(mListener!=null){
+                int position=getAdapterPosition();
+                if(position!=RecyclerView.NO_POSITION){
+                    switch (item.getItemId()){
+                        case 1:
+                            mListener.onWhatEverClick(position);
+                            return true;
+                        case 2:
+                            mListener.onDeleteClick(position);
+                            return true;
+
+                    }
+                }
+            }
+            return false;
+        }
+    }
+    public interface onItemClickListener {
+        void onItemClick(int position);
+
+        void onWhatEverClick(int position);
+
+        void onDeleteClick(int position);
+
+    }
+
+    public void setOnItemClickListener(onItemClickListener listener) {
+        mListener = listener;
+
     }
 
 }

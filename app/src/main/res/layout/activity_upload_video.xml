@@ -30,7 +30,7 @@
             android:layout_height="150dp"
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="30dp"
-            android:layout_marginTop="200dp"
+            android:layout_marginTop="250dp"
             android:layout_marginRight="30dp"
 
 
@@ -73,9 +73,8 @@
             android:id="@+id/choose"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/video"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="15dp"
+android:layout_marginTop="130dp"
+            android:layout_marginStart="20dp"
             android:background="@drawable/rounded_button"
             android:text="إختر ملف"
             android:textColor="@color/colorPrimary"
@@ -86,28 +85,31 @@
             android:id="@+id/upload"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/choose"
+            android:layout_below="@+id/progress_bar"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="16dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="160dp"
+            android:layout_marginTop="15dp"
+
             android:background="@drawable/rounded_button"
             android:text="نشر"
+
             android:textColor="@color/colorPrimary"
 
             />
 
-        <Button
-            android:id="@+id/cancel"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/choose"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="16dp"
-            android:background="@drawable/rounded_button"
-            android:onClick="previous"
-            android:text="إلغاء"
-            android:textColor="@color/colorPrimary"
+            android:layout_alignBottom="@+id/upload"
+            android:text="عرض الفديوهات  "
+            android:layout_marginStart="15dp"
+
+            android:id="@+id/show_videos_uploads"
 
             />
+
+
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/tool_bar"

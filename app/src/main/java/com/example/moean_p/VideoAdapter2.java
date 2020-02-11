@@ -1,9 +1,12 @@
 package com.example.moean_p;
 
+import com.google.firebase.database.Exclude;
+
 public class VideoAdapter2 {
 
     private String name;
     private String videoUrl;
+    private String mKey;
 
     public VideoAdapter2(){
 
@@ -29,7 +32,18 @@ public class VideoAdapter2 {
         return videoUrl;
     }
 
+
+
     public void setVideoUrl(String videoUrl) {
         this.videoUrl = videoUrl;
+    }
+    @Exclude
+    public String getmKey(){
+        return mKey;
+    }
+    @Exclude
+
+    public void setmKey(String key){
+        mKey=key;
     }
 }
