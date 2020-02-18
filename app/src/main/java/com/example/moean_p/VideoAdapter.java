@@ -24,15 +24,13 @@ import com.squareup.picasso.Target;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder>{
+public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> {
 
 
-    private List<VideoAdapter2> mUploads ;
+    private List<VideoAdapter2> mUploads;
 
     private Context mContext;
     private onItemClickListener mListener;
-
-
 
 
     public VideoAdapter(Context context, List<VideoAdapter2> uploads) {
@@ -51,7 +49,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-        VideoAdapter2 uploadCurrent=mUploads.get(position);
+        VideoAdapter2 uploadCurrent = mUploads.get(position);
         holder.VideoName.setText(uploadCurrent.getName());
 
 
@@ -62,40 +60,40 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder>{
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
-    , View.OnCreateContextMenuListener , MenuItem.OnMenuItemClickListener {
+            , View.OnCreateContextMenuListener, MenuItem.OnMenuItemClickListener {
 
-      public   TextView VideoName;
-       public  VideoView videoView;
+        public TextView VideoName;
+        public VideoView videoView;
 
 
         public ViewHolder(@NonNull View itemView) {
 
             super(itemView);
 
-            VideoName=itemView.findViewById(R.id.video_name);
-            videoView=itemView.findViewById(R.id.video_view_upload);
+            VideoName = itemView.findViewById(R.id.video_name);
+            videoView = itemView.findViewById(R.id.video_view_upload);
             itemView.setOnClickListener(this);
             itemView.setOnCreateContextMenuListener(this);
-
 
 
         }
 
         @Override
         public void onClick(View v) {
-            if(mListener!=null){
-                int position=getAdapterPosition();
-                if(position!=RecyclerView.NO_POSITION){
+            if (mListener != null) {
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION) {
                     mListener.onItemClick(position);
                 }
             }
         }
 
+
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
             menu.setHeaderTitle("select Action");
-            MenuItem doWhatever =menu.add(Menu.NONE,1,1,"Do Whatever");
-            MenuItem delete=menu.add(Menu.NONE,2,2,"Delete");
+            MenuItem doWhatever = menu.add(Menu.NONE, 1, 1, "Do Whatever");
+            MenuItem delete = menu.add(Menu.NONE, 2, 2, "Delete");
 
             doWhatever.setOnMenuItemClickListener(this);
             delete.setOnMenuItemClickListener(this);
@@ -104,10 +102,10 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder>{
 
         @Override
         public boolean onMenuItemClick(MenuItem item) {
-            if(mListener!=null){
-                int position=getAdapterPosition();
-                if(position!=RecyclerView.NO_POSITION){
-                    switch (item.getItemId()){
+            if (mListener != null) {
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION) {
+                    switch (item.getItemId()) {
                         case 1:
                             mListener.onWhatEverClick(position);
                             return true;
@@ -121,8 +119,11 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder>{
             return false;
         }
     }
+
     public interface onItemClickListener {
         void onItemClick(int position);
+
+        void play(int position);
 
         void onWhatEverClick(int position);
 
@@ -130,9 +131,15 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder>{
 
     }
 
+    public interface onClickListener {
+        void onClickItem(int position);
+
+    }
+
     public void setOnItemClickListener(onItemClickListener listener) {
         mListener = listener;
 
     }
-
 }
+
+

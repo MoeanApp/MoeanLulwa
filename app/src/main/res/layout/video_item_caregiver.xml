@@ -21,6 +21,17 @@
 
 
             />
+        <TextView
+            android:id="@+id/advisor_name"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="100dp"
+            android:layout_marginTop="10dp"
+            android:text="أسم المستشار"
+            android:textColor="@color/colorPrimary"
+            android:textSize="17sp"/>
+
+
 
 
         <VideoView

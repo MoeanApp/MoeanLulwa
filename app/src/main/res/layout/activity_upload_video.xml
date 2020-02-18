@@ -14,15 +14,16 @@
 
         <TextView
             android:id="@+id/text2"
-            android:layout_width="match_parent"
+            android:layout_width="200dp"
             android:layout_height="100dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="60dp"
-            android:gravity="center_horizontal"
+            android:layout_marginTop="50dp"
+            android:layout_marginLeft="50dp"
             android:paddingTop="30dp"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary"
             android:text="إضافة فديو جديد"
 
-            android:textSize="18sp" />
+            android:textSize="20sp" />
 
         <VideoView
             android:id="@+id/video"
@@ -30,7 +31,7 @@
             android:layout_height="150dp"
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="30dp"
-            android:layout_marginTop="250dp"
+            android:layout_marginTop="300dp"
             android:layout_marginRight="30dp"
 
 
@@ -38,12 +39,12 @@
 
         <TextView
             android:id="@+id/name"
-            android:layout_width="140dp"
-            android:layout_height="130dp"
+            android:layout_width="160dp"
+            android:layout_height="300dp"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="58dp"
+            android:layout_marginTop="24dp"
             android:layout_marginEnd="6dp"
-            android:paddingTop="90dp"
+            android:paddingTop="150dp"
             android:text="عنوان الفديو"
             android:textSize="18sp" />
 
@@ -53,7 +54,7 @@
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="80dp"
             android:ems="10"
             android:hint="أدخل عنوان الفديو"
             android:inputType="textPersonName"
@@ -73,8 +74,9 @@
             android:id="@+id/choose"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-android:layout_marginTop="130dp"
-            android:layout_marginStart="20dp"
+            android:layout_marginStart="140dp"
+            android:layout_marginTop="25dp"
+            android:layout_below="@+id/title"
             android:background="@drawable/rounded_button"
             android:text="إختر ملف"
             android:textColor="@color/colorPrimary"
@@ -88,8 +90,8 @@ android:layout_marginTop="130dp"
             android:layout_below="@+id/progress_bar"
             android:layout_alignParentLeft="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginStart="160dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginStart="140dp"
+            android:layout_marginTop="30dp"
 
             android:background="@drawable/rounded_button"
             android:text="نشر"
@@ -98,16 +100,7 @@ android:layout_marginTop="130dp"
 
             />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/upload"
-            android:text="عرض الفديوهات  "
-            android:layout_marginStart="15dp"
 
-            android:id="@+id/show_videos_uploads"
-
-            />
 
 
 
@@ -125,7 +118,7 @@ android:layout_marginTop="130dp"
                 android:id="@+id/previous"
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
-                android:layout_marginStart="350dp"
+                android:layout_marginStart="200dp"
                 android:background="@drawable/ic_keyboard_arrow_right_black_24dp"
                 android:onClick="previous" />
         </androidx.appcompat.widget.Toolbar>

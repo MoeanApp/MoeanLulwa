@@ -66,6 +66,11 @@ public class mile extends AppCompatActivity {
                     return true;
 
                 }
+
+                else if(menuItem.getItemId()==R.id.nav_video2){
+                    videos();
+                    return true;
+                }
                 return false;
             }
         });
@@ -111,5 +116,9 @@ public class mile extends AppCompatActivity {
         startActivity(intent2);
     }
 
+    public void videos(){
+        intent2=new Intent(this,videoscare.class);
+        startActivity(intent2);
 
+    }
 }

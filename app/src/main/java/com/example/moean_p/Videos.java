@@ -12,14 +12,19 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.MediaController;
 import android.widget.Toast;
+import android.widget.VideoView;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -31,6 +36,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,18 +46,24 @@ public class Videos extends AppCompatActivity implements VideoAdapter.onItemClic
     NavigationView navigationView;
     ActionBarDrawerToggle toggle;
     Intent intent2;
+    VideoView videoView;
 
 
     BottomNavigationView bottomNavigationView;
 
+
     private static final String TAG = "Videos";
 
-    private List<VideoAdapter2> mUploads;
+    public static List<VideoAdapter2> mUploads;
+    public static List<VideoAdapter2> uploads = new ArrayList<>();
+
+    private Button delete_video;
 
     private VideoAdapter adapter;
     private RecyclerView recycleView;
 
-    private FirebaseStorage storage;
+    public FirebaseStorage storage;
+
 
     private DatabaseReference databaseReference;
     private ValueEventListener mDBListener;
@@ -67,6 +79,7 @@ public class Videos extends AppCompatActivity implements VideoAdapter.onItemClic
         setSupportActionBar(toolbar);
 
         recycleView = findViewById(R.id.recycler_view);
+        videoView=findViewById(R.id.video_view);
         recycleView.setHasFixedSize(true);
         recycleView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -75,8 +88,11 @@ public class Videos extends AppCompatActivity implements VideoAdapter.onItemClic
         adapter.setOnItemClickListener(Videos.this);
         recycleView.setAdapter(adapter);
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("uploads");
         storage=FirebaseStorage.getInstance();
+
+        databaseReference = FirebaseDatabase.getInstance().getReference("uploads");
+
+
 
         mDBListener= databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -90,6 +106,7 @@ public class Videos extends AppCompatActivity implements VideoAdapter.onItemClic
 
 
 adapter.notifyDataSetChanged();
+
             }
 
 
@@ -155,6 +172,8 @@ adapter.notifyDataSetChanged();
                 Openactivity();
             }
         });
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recycleView);
+
 
 
     }
@@ -199,7 +218,20 @@ adapter.notifyDataSetChanged();
 
     @Override
     public void onItemClick(int position) {
-        Toast.makeText(this,"Normal Click at the position:"+position,Toast.LENGTH_SHORT).show();
+
+
+
+Video_Play.pos=position;
+        Intent intent=new Intent(this,Video_Play.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+
+
+    }
+
+    @Override
+    public void play(int position) {
+
     }
 
     @Override
@@ -211,6 +243,7 @@ adapter.notifyDataSetChanged();
 
     @Override
     public void onDeleteClick(int position) {
+
 VideoAdapter2 selectedItem=mUploads.get(position);
 final String selectedKey=selectedItem.getmKey();
         StorageReference VideoRef=storage.getReferenceFromUrl(selectedItem.getVideoUrl());
@@ -220,12 +253,68 @@ final String selectedKey=selectedItem.getmKey();
                 databaseReference.child(selectedKey).removeValue();
                 Toast.makeText(Videos.this, "Item Deleted", Toast.LENGTH_SHORT).show();
             }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                databaseReference.child(selectedKey).removeValue();
+                Toast.makeText(Videos.this, "Item Deleted", Toast.LENGTH_SHORT).show();
+
+            }
         });
-    }
+
+
+        }
+
+
+    ItemTouchHelper.SimpleCallback itemTouchHelperCallback =new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.RIGHT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder viewHolder1) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+            onDeleteClick(i);
+        }
+    };
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         databaseReference.removeEventListener(mDBListener);
     }
+/*
+    public ArrayList<VideoAdapter2> getUploads(File directory){
+        File listfile[]=directory.listFiles();
+        if(listfile!=null && listfile.length>0){
+            for(int i=0;i<listfile.length;i++){
+                if(listfile[i].isDirectory()){
+                    getUploads(listfile[i]);
+                }
+                else if (listfile[i].getName().endsWith("3gpp")){
+                    for(int j=0;j<mUploads.size();j++){
+                        if (mUploads.get(j).getName().equals(listfile[i].getName())){
+
+                        }else{
+
+                        }
+                    }
+
+                }mUploads.add(listfile[i]);
+            }
+        }    return mUploads;
+
+    }
+
+ */
+
+public static List<VideoAdapter2> getmUploads(){
+
+    for(int i=0;i<mUploads.size();i++) {
+        if (mUploads.get(i) != null) {
+            uploads.add(mUploads.get(i));
+        }
+    }
+    return uploads;
+}
 }

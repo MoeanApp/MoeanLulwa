@@ -24,20 +24,19 @@
             android:id="@+id/textView3"
             android:layout_width="380dp"
             android:layout_height="61dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="50dp"
             android:layout_below="@+id/imageView"
-            android:text="إشتملت رؤية المملكة 2030 على توجهات عظيمة نحو تعزيز حقوق الأشخاص ذوي الإعاقة، وتماشيا مع هذه التوجهات ، نطمح أن يكون معين بمثابة جسر متين بين مقدمي الرعاية و المستشارين"
-            android:layout_centerHorizontal="true"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            />
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="50dp"
+            android:gravity="center_horizontal"
+            android:text="إشتملت رؤية المملكة 2030 على توجهات عظيمة نحو تعزيز حقوق الأشخاص ذوي الإعاقة، وتماشيا مع هذه التوجهات ، نطمح أن يكون معين بمثابة جسر متين بين مقدمي الرعاية و المستشارين."
+            android:textSize="14sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/contact_us"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="450dp"
+            android:layout_marginStart="300dp"
             android:layout_marginTop="30dp"
             android:text="تواصل معنا"
             android:textSize="10dp"
@@ -48,12 +47,12 @@
         <Button
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_marginStart="450dp"
-            android:layout_marginTop="80dp"
+            android:layout_marginStart="305dp"
+            android:layout_marginTop="55dp"
             android:layout_below="@+id/textView3"
             android:id="@+id/twitter"
             android:onClick="twitter"
-            android:background="@drawable/twitter"
+            android:background="@drawable/twitter2"
 
             />
 
@@ -68,7 +67,8 @@
             android:text="من نحن؟"
             android:textStyle="bold"
             android:textColor="@color/colorPrimary"
-            android:textSize="17sp"/>
+
+            android:textSize="20sp"/>
 
 
         <com.google.android.material.bottomnavigation.BottomNavigationView

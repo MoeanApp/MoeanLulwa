@@ -60,6 +60,15 @@ public class location extends AppCompatActivity {
                 }
                 else if(menuItem.getItemId()==R.id.nav_who_is_moean2){
                     Whoismoean();
+                    return true;
+                }
+                else if(menuItem.getItemId()==R.id.nav_progress){
+                    progress();
+                    return true;
+
+                }else if (menuItem.getItemId()==R.id.nav_video2){
+                    videos();
+                    return true;
                 }
 
 
@@ -67,6 +76,8 @@ public class location extends AppCompatActivity {
                 return false;
             }
         });
+
+
 
         bottomNavigationView=findViewById(R.id.bottom2_nav);
         bottomNavigationView.setOnNavigationItemReselectedListener(new BottomNavigationView.OnNavigationItemReselectedListener() {
@@ -90,6 +101,17 @@ public class location extends AppCompatActivity {
         intent2=new Intent(this,childprofile.class);
         startActivity(intent2);
 
+    }
+
+    public void videos(){
+        intent2=new Intent(this,videoscare.class);
+        startActivity(intent2);
+
+    }
+
+    public void progress(){
+        intent2=new Intent(this,mile.class);
+        startActivity(intent2);
     }
 
     public void consult(){

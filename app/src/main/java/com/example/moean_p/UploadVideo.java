@@ -46,7 +46,7 @@ public class UploadVideo extends AppCompatActivity {
     private Button cancel, choose, upload;
     private VideoView video;
     private EditText filename;
-    private TextView name,showuploads;
+    private TextView name;
 
     private ProgressBar progressBar;
     private DrawerLayout drawer;
@@ -85,7 +85,6 @@ public class UploadVideo extends AppCompatActivity {
         video = findViewById(R.id.video);
         filename = findViewById(R.id.title);
         name = findViewById(R.id.name);
-        showuploads=findViewById(R.id.show_videos_uploads);
 
 
         progressBar = findViewById(R.id.progress_bar);
@@ -125,12 +124,7 @@ if(mUploadTask!=null && mUploadTask.isInProgress()){
             }
         });
 
-        showuploads.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openVideosActiviy();
-            }
-        });
+
 
 
 
@@ -158,6 +152,7 @@ if(mUploadTask!=null && mUploadTask.isInProgress()){
         && data !=null && data.getData()!=null){
             videoUrl=data.getData();
             video.setVideoURI(videoUrl);
+
 
         }
 

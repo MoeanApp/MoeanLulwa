@@ -13,23 +13,28 @@
 
         <TextView
             android:id="@+id/text_follow"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="70dp"
+            android:layout_marginStart="167dp"
+            android:layout_marginTop="80dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="7dp"
             android:text="متابعة الطفل"
-            android:textAlignment="center"
-            android:textSize="24sp" />
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary"
+
+            android:textSize="20sp" />
 
         <TextView
 
             android:id="@+id/steps_text"
             android:layout_width="100dp"
             android:layout_height="30dp"
-            android:layout_marginStart="250dp"
-            android:layout_marginTop="45dp"
+            android:layout_marginStart="210dp"
+            android:layout_marginTop="25dp"
             android:layout_below="@+id/text_follow"
             android:text="الخطوات"
-            android:textColor="#2196F3"
+            android:textColor="@color/colorPrimary"
             android:textSize="18sp"
             />
 
@@ -37,13 +42,13 @@
             android:id="@+id/text_heart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="60dp"
-            android:layout_marginTop="45dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="25dp"
             android:layout_marginEnd="103dp"
             android:layout_marginBottom="20dp"
             android:text="نبضات القلب"
             android:textAllCaps="false"
-            android:textColor="#2196F3"
+            android:textColor="@color/colorPrimary"
             android:textSize="18sp"
             android:layout_below="@+id/text_follow"
             />
@@ -52,7 +57,7 @@
             android:id="@+id/heart_image"
             android:layout_width="70dp"
             android:layout_height="78dp"
-            android:layout_marginStart="66dp"
+            android:layout_marginStart="40dp"
             android:layout_marginEnd="53dp"
             android:layout_marginBottom="1dp"
             app:srcCompat="@drawable/heart"
@@ -60,9 +65,9 @@
 
         <ImageView
             android:id="@+id/step_image"
-            android:layout_width="200dp"
+            android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_marginStart="290dp"
+            android:layout_marginStart="245dp"
             android:layout_marginEnd="53dp"
             app:srcCompat="@drawable/ic_directions_walk_black_24dp"
             android:layout_below="@+id/steps_text" />
@@ -73,8 +78,8 @@
             android:id="@+id/calculated_heartrate"
             android:layout_width="67dp"
             android:layout_height="18dp"
-            android:layout_marginStart="68dp"
-            android:layout_marginTop="17dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="90dp"
             android:layout_marginBottom="6dp"
             android:layout_below="@+id/heart_image"
@@ -87,7 +92,7 @@
             android:id="@+id/calculated_steps"
             android:layout_width="71dp"
             android:layout_height="16dp"
-            android:layout_marginStart="290dp"
+            android:layout_marginStart="245dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="54dp"
             android:layout_marginBottom="10dp"
@@ -100,15 +105,13 @@
             android:id="@+id/location_child"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="279dp"
-            android:layout_marginTop="21dp"
+            android:layout_marginStart="140dp"
+            android:layout_marginTop="20dp"
             android:layout_marginEnd="56dp"
             android:layout_marginBottom="250dp"
             android:text="موقع الطفل"
-            android:textAlignment="center"
-            android:textColor="#2196F3"
-            android:textSize="18sp"
-            android:layout_centerHorizontal="true"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16sp"
             android:layout_below="@+id/calculated_steps"
             />
 
@@ -117,7 +120,7 @@
             android:layout_height="150dp"
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="30dp"
-            android:layout_marginTop="400dp"
+            android:layout_marginTop="360dp"
             android:layout_marginRight="30dp"
 
             />

@@ -16,73 +16,77 @@
 
     <TextView
         android:id="@+id/textView5"
-        android:layout_width="match_parent"
+
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
+        android:layout_marginStart="167dp"
+        android:layout_marginTop="80dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="7dp"
         android:text="صفحة الطفل الشخصية"
-        android:textAlignment="center"
-        android:textSize="24sp" />
+        android:textStyle="bold"
+        android:textColor="@color/colorPrimary"
+
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/textView26"
         android:layout_width="154dp"
         android:layout_height="23dp"
-        android:layout_marginStart="2dp"
+        android:layout_marginStart="8dp"
         android:layout_marginEnd="256dp"
-        android:layout_marginTop="140dp"
+        android:layout_marginTop="85dp"
         android:layout_below="@+id/textView5"
         android:text="نعم             لا"
         android:textAlignment="center"/>
 
     <TextView
         android:id="@+id/textView33"
-        android:layout_width="wrap_content"
+        android:layout_width="400dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="300dp"
+        android:layout_marginStart="270dp"
         android:layout_below="@+id/textView5"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="18dp"
         android:layout_marginBottom="17dp"
-        android:text="إسم الطفل:"
+        android:text="أسم الطفل:"
         android:textSize="18sp"
         />
     <TextView
         android:id="@+id/textView34"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/textView33"
         android:layout_marginEnd="18dp"
-        android:layout_marginStart="300dp"
+        android:layout_marginTop="185dp"
+        android:layout_marginStart="240dp"
         android:layout_marginBottom="58dp"
-        android:text="تاريخ الميلاد :"
+        android:text="تاريخ الميلاد:"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView33" />
 
-    <EditText
-        android:id="@+id/name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="75dp"
-        android:layout_marginTop="37dp"
-        android:layout_marginBottom="2dp"
-        android:layout_below="@+id/textView5"
-        android:ems="10"
-        android:hint="أدخل الإسم هنا"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toStartOf="@+id/textView33"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <EditText
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView5"
+            android:layout_marginStart="55dp"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:hint="أدخل الإسم هنا"
+            android:inputType="textPersonName"
+            app:layout_constraintEnd_toStartOf="@+id/textView33"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tvthedate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="220dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginStart="170dp"
+        android:layout_marginTop="188dp"
         android:layout_marginEnd="44dp"
-        android:layout_below="@+id/name"
         android:layout_marginBottom="7dp"
         android:hint="10/4/2010"
         app:layout_constraintEnd_toStartOf="@+id/textView34"
@@ -92,8 +96,8 @@
         android:id="@+id/textView0"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="325dp"
-        android:layout_marginTop="250dp"
+        android:layout_marginStart="275dp"
+        android:layout_marginTop="240dp"
         android:text="السؤال الاول"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -102,8 +106,8 @@
         android:id="@+id/textView12"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="325dp"
-        android:layout_marginTop="300dp"
+        android:layout_marginStart="275dp"
+        android:layout_marginTop="280dp"
         android:text="السؤال الثاني"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -113,8 +117,8 @@
         android:id="@+id/textView13"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="326dp"
-        android:layout_marginTop="350dp"
+        android:layout_marginStart="275dp"
+        android:layout_marginTop="320dp"
         android:text="السؤال الثالث"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -124,8 +128,8 @@
         android:id="@+id/textView14"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="330dp"
-        android:layout_marginTop="400dp"
+        android:layout_marginStart="277dp"
+        android:layout_marginTop="360dp"
         android:text="السؤال الرابع"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -135,8 +139,8 @@
         android:id="@+id/textView15"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="320dp"
-        android:layout_marginTop="450dp"
+        android:layout_marginStart="270dp"
+        android:layout_marginTop="400dp"
         android:text="السؤال الخامس"
         app:layout_constraintBottom_toTopOf="@+id/textView26"
         app:layout_constraintEnd_toEndOf="parent"
@@ -147,25 +151,32 @@
         android:id="@+id/textView21"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="320dp"
+        android:layout_marginStart="270dp"
         android:layout_marginEnd="10dp"
-        android:layout_marginTop="500dp"
+        android:layout_marginTop="440dp"
         android:text="السؤال السادس"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/buttonsave"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="150dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="150dp"
-        android:layout_marginBottom="11dp"
-        android:layout_below="@+id/textView21"
-        android:text="حفظ البيانات "
-        android:textColor="@color/colorPrimary"/>
+
+
+        <Button
+            android:id="@+id/save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView21"
+            android:layout_alignParentLeft="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="140dp"
+            android:layout_marginTop="2dp"
+
+            android:background="@drawable/rounded_button"
+            android:text="حفظ البيانات"
+
+            android:textColor="@color/colorPrimary"
+
+            />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -199,7 +210,9 @@
             android:layout_height="match_parent"
 
 
-            />
+            >
+
+        </FrameLayout>
 
 
 

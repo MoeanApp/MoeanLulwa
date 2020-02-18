@@ -16,21 +16,24 @@
 
         <TextView
             android:id="@+id/text2"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="167dp"
+            android:layout_marginTop="80dp"
             android:layout_centerHorizontal="true"
-            android:gravity="center_horizontal"
-            android:paddingTop="30dp"
-            android:layout_marginTop="70dp"
-            android:text="المقاطع"
-            android:textSize="18sp" />
+            android:layout_marginBottom="7dp"
+            android:text="مقاطع الفديو"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary"
+
+            android:textSize="20sp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_care_videos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/text2"
-            android:layout_marginTop="6dp" />
+            android:layout_marginTop="20dp" />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
 
