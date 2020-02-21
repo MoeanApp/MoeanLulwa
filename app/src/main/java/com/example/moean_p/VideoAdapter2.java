@@ -1,6 +1,7 @@
 package com.example.moean_p;
 
 import com.google.firebase.database.Exclude;
+import java.io.*;
 
 public class VideoAdapter2 {
 
@@ -14,7 +15,7 @@ public class VideoAdapter2 {
 
     public VideoAdapter2(String name, String videoUrl) {
         if(name.trim().equals("")){
-            name="no name";
+            name="بدون عنوان";
         }
         this.name = name;
         this.videoUrl = videoUrl;

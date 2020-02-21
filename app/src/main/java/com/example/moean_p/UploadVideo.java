@@ -10,13 +10,16 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Debug;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -31,15 +34,23 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.core.Path;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
+
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
+
 
 public class UploadVideo extends AppCompatActivity {
 
@@ -50,14 +61,15 @@ public class UploadVideo extends AppCompatActivity {
 
     private ProgressBar progressBar;
     private DrawerLayout drawer;
-    private StorageReference storageReference;
-    private Uri videoUrl;
+    public static StorageReference storageReference;
+    public static Uri videoUrl;
     private DatabaseReference databaseReference;
-    private StorageTask mUploadTask;
+    public static StorageTask mUploadTask;
+    public static StorageReference fileReferance;
     Intent intent1;
     Button previous;
 
-    private static final int VideoBack = 1;
+    private static final int REQUEST_TAKE_GALLERY_VIDEO = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +79,6 @@ public class UploadVideo extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
-
 
 
         drawer = findViewById(R.id.drawer2_layout);
@@ -89,21 +100,21 @@ public class UploadVideo extends AppCompatActivity {
 
         progressBar = findViewById(R.id.progress_bar);
 
-        storageReference=FirebaseStorage.getInstance().getReference("uploads");
-        databaseReference=FirebaseDatabase.getInstance().getReference("uploads");
+        storageReference = FirebaseStorage.getInstance().getReference("uploads");
+        databaseReference = FirebaseDatabase.getInstance().getReference("uploads");
 
         upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-if(mUploadTask!=null && mUploadTask.isInProgress()){
+                if (mUploadTask != null && mUploadTask.isInProgress()) {
 
-    Toast.makeText(UploadVideo.this,"upload in progress",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UploadVideo.this, "upload in progress", Toast.LENGTH_SHORT).show();
 
 
-                }else {
-    UploadsFile();
+                } else {
+                    UploadsFile();
 
-}
+                }
 
             }
         });
@@ -125,16 +136,14 @@ if(mUploadTask!=null && mUploadTask.isInProgress()){
         });
 
 
-
-
-
     }
 
     private void openFileChooser() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("video/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent, VideoBack);
+        startActivityForResult(Intent.createChooser(intent,"select video"),REQUEST_TAKE_GALLERY_VIDEO);
+
 
 
     }
@@ -148,74 +157,148 @@ if(mUploadTask!=null && mUploadTask.isInProgress()){
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==VideoBack && resultCode==RESULT_OK
-        && data !=null && data.getData()!=null){
-            videoUrl=data.getData();
+        if (requestCode == REQUEST_TAKE_GALLERY_VIDEO && resultCode == RESULT_OK
+                && data.getData() != null && data.getData() != null) {
+          //  Uri uri=getRealPathFromURI();
+            videoUrl = data.getData();
+            try {
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
             video.setVideoURI(videoUrl);
+
+
+         //  String path = getRealPathFromURI(this,videoUrl);
+           //String name=getFileName(videoUrl);
+
+
+           /* try {
+                insertInPrivateStorage(name,path);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            */
 
 
         }
 
     }
 
-    private String getFileEctention(Uri uri){
-        ContentResolver CR=getContentResolver();
-        MimeTypeMap mimeTypeMap=MimeTypeMap.getSingleton();
+    private void insertInPrivateStorage(String name, String path) throws IOException {
+        FileOutputStream fos=openFileOutput(name,MODE_APPEND);
+        File file=new File(path);
+        byte[]bytes=getBytesFromFile(file);
+
+        fos.write(bytes);
+        fos.close();
+
+        Toast.makeText(getApplicationContext(), "File saved in"+getFilesDir()+"/"+name, Toast.LENGTH_SHORT).show();
+    }
+
+    private byte[] getBytesFromFile(File file) throws IOException {
+        byte[] data = FileUtils.readFileToByteArray(file);
+        return data;
+
+    }
+
+    private String getFileName(Uri uri) {
+        String result =null;
+        if(uri.getScheme().equals("content")){
+            Cursor cursor=getContentResolver().query(uri,null,null,null,null);
+            try{
+                if(cursor!=null && cursor.moveToFirst()) {
+                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                }
+            }finally {
+                cursor.close();
+            }
+
+        }
+        if(result==null){
+            result=uri.getPath();
+            int cut=result.lastIndexOf('/');
+            if(cut!=-1){
+                result=result.substring(cut+1);
+            }
+        }
+        return result;
+    }
+
+    private String getRealPathFromURI(Context context,Uri videoUrl) {
+        String[]proj={MediaStore.Video.Media.DATA};
+        Cursor cursor=context.getContentResolver().query(videoUrl,proj,null,null,null);
+        if(cursor!=null){
+            int column_index=cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        }
+        return null;
+
+    }
+
+    private String getFileEctention(Uri uri) {
+        ContentResolver CR = getContentResolver();
+        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
         return mimeTypeMap.getExtensionFromMimeType(CR.getType(uri));
     }
 
-    private void UploadsFile(){
-if(videoUrl!=null){
-    StorageReference fileReferance=storageReference.child("uploads/"+System.currentTimeMillis()+
-           "."+ getFileEctention(videoUrl));
-    mUploadTask=fileReferance.putFile(videoUrl)
-            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Handler handler=new Handler();
-                    handler.postDelayed(new Runnable() {
+    private void UploadsFile() {
+        if (videoUrl != null) {
+            fileReferance = storageReference.child("uploads/" + System.currentTimeMillis() +
+                    "." + getFileEctention(videoUrl));
+            mUploadTask = fileReferance.putFile(videoUrl)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
-                        public void run() {
-                            progressBar.setProgress(0);
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    progressBar.setProgress(0);
+                                }
+                            }, 500);
+                            Toast.makeText(UploadVideo.this, "upload successful", Toast.LENGTH_LONG);
+                            VideoAdapter2 upload = new VideoAdapter2(filename.getText().toString().trim(),
+                                    taskSnapshot.getUploadSessionUri().toString());
+                            String uploadId = databaseReference.push().getKey();
+                            databaseReference.child(uploadId).setValue(upload);
+
+
                         }
-                    },500);
-                    Toast.makeText(UploadVideo.this,"upload successful",Toast.LENGTH_LONG);
-                    VideoAdapter2 upload=new VideoAdapter2(filename.getText().toString().trim(),
-                            taskSnapshot.getUploadSessionUri().toString());
-                    String uploadId=databaseReference.push().getKey();
-                    databaseReference.child(uploadId).setValue(upload);
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
+                            Toast.makeText(UploadVideo.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                        }
+                    })
+
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
+                            double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                            progressBar.setProgress((int) progress);
+                        }
+                    });
 
 
-                }
-            })
-            .addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-
-                    Toast.makeText(UploadVideo.this,e.getMessage(),Toast.LENGTH_SHORT).show();
-
-                }
-            })
-
-            .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
-                    double progress=(100.0 * taskSnapshot.getBytesTransferred()/ taskSnapshot.getTotalByteCount());
-                    progressBar.setProgress((int)progress);
-                }
-            });
-    
-
-}else{
-    Toast.makeText(this,"No file selected",Toast.LENGTH_LONG).show();
-}
+        } else {
+            Toast.makeText(this, "No file selected", Toast.LENGTH_LONG).show();
+        }
 
     }
-private void openVideosActiviy(){
 
-    intent1=new Intent(this,Videos.class);
-    startActivity(intent1);
+    private void openVideosActiviy() {
 
-}
+        intent1 = new Intent(this, Videos.class);
+        startActivity(intent1);
+
+    }
 
 }

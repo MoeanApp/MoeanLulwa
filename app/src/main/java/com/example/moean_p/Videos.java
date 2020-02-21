@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -11,9 +13,12 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +26,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.MediaController;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.widget.VideoView;
 
@@ -33,13 +39,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.core.Path;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
+import java.security.Permission;
 import java.util.ArrayList;
 import java.util.List;
-
 public class Videos extends AppCompatActivity implements VideoAdapter.onItemClickListener {
 
     ImageButton b2;
@@ -47,10 +55,12 @@ public class Videos extends AppCompatActivity implements VideoAdapter.onItemClic
     ActionBarDrawerToggle toggle;
     Intent intent2;
     VideoView videoView;
-
+    public static VideoAdapter2 upload;
+public static int position1;
 
     BottomNavigationView bottomNavigationView;
 
+    File directory;
 
     private static final String TAG = "Videos";
 
@@ -59,10 +69,10 @@ public class Videos extends AppCompatActivity implements VideoAdapter.onItemClic
 
     private Button delete_video;
 
-    private VideoAdapter adapter;
+    public static VideoAdapter adapter;
     private RecyclerView recycleView;
 
-    public FirebaseStorage storage;
+    public static FirebaseStorage storage;
 
 
     private DatabaseReference databaseReference;
@@ -78,15 +88,26 @@ public class Videos extends AppCompatActivity implements VideoAdapter.onItemClic
         Toolbar toolbar = findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
 
+
+        directory=new File("/mnt");
+
+        //directory=new File("/storage");
+
+
+
+
+
         recycleView = findViewById(R.id.recycler_view);
         videoView=findViewById(R.id.video_view);
         recycleView.setHasFixedSize(true);
         recycleView.setLayoutManager(new LinearLayoutManager(this));
 
+
+
         mUploads = new ArrayList<>();
         adapter = new VideoAdapter(Videos.this, mUploads);
-        adapter.setOnItemClickListener(Videos.this);
         recycleView.setAdapter(adapter);
+        adapter.setOnItemClickListener(Videos.this);
 
         storage=FirebaseStorage.getInstance();
 
@@ -99,13 +120,14 @@ public class Videos extends AppCompatActivity implements VideoAdapter.onItemClic
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mUploads.clear();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    VideoAdapter2 upload = postSnapshot.getValue(VideoAdapter2.class);
+                     upload = postSnapshot.getValue(VideoAdapter2.class);
                     upload.setmKey(postSnapshot.getKey());
                     mUploads.add(upload);
                 }
 
 
-adapter.notifyDataSetChanged();
+                adapter.notifyDataSetChanged();
+
 
             }
 
@@ -178,6 +200,8 @@ adapter.notifyDataSetChanged();
 
     }
 
+
+
     public void profile() {
 
         intent2 = new Intent(this, AdvisorProfile.class);
@@ -219,12 +243,11 @@ adapter.notifyDataSetChanged();
     @Override
     public void onItemClick(int position) {
 
-
-
-Video_Play.pos=position;
+        position1=position;
         Intent intent=new Intent(this,Video_Play.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+
 
 
     }
@@ -244,8 +267,8 @@ Video_Play.pos=position;
     @Override
     public void onDeleteClick(int position) {
 
-VideoAdapter2 selectedItem=mUploads.get(position);
-final String selectedKey=selectedItem.getmKey();
+        VideoAdapter2 selectedItem=mUploads.get(position);
+        final String selectedKey=selectedItem.getmKey();
         StorageReference VideoRef=storage.getReferenceFromUrl(selectedItem.getVideoUrl());
         VideoRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -253,17 +276,10 @@ final String selectedKey=selectedItem.getmKey();
                 databaseReference.child(selectedKey).removeValue();
                 Toast.makeText(Videos.this, "Item Deleted", Toast.LENGTH_SHORT).show();
             }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                databaseReference.child(selectedKey).removeValue();
-                Toast.makeText(Videos.this, "Item Deleted", Toast.LENGTH_SHORT).show();
-
-            }
         });
 
 
-        }
+    }
 
 
     ItemTouchHelper.SimpleCallback itemTouchHelperCallback =new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.RIGHT) {
@@ -283,38 +299,43 @@ final String selectedKey=selectedItem.getmKey();
         super.onDestroy();
         databaseReference.removeEventListener(mDBListener);
     }
-/*
-    public ArrayList<VideoAdapter2> getUploads(File directory){
-        File listfile[]=directory.listFiles();
-        if(listfile!=null && listfile.length>0){
-            for(int i=0;i<listfile.length;i++){
-                if(listfile[i].isDirectory()){
-                    getUploads(listfile[i]);
-                }
-                else if (listfile[i].getName().endsWith("3gpp")){
-                    for(int j=0;j<mUploads.size();j++){
-                        if (mUploads.get(j).getName().equals(listfile[i].getName())){
+private void datafromfirebase(){
+        if(mUploads.size()>0)
+            mUploads.clear();
+    storage=FirebaseStorage.getInstance();
+    StorageReference storageReference= storage.getReferenceFromUrl("uploads");
+    StorageReference islandRef=storageReference.child("uploads.txt");
 
-                        }else{
-
-                        }
-                    }
-
-                }mUploads.add(listfile[i]);
-            }
-        }    return mUploads;
+    File rootPath=new File(Environment.getExternalStorageDirectory(),"uploads");
+    if(rootPath.exists()) {
+        rootPath.mkdirs();
 
     }
+    final File localFle=new File(rootPath,"zzeue.mp4");
+    islandRef.getFile(localFle).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+        @Override
+        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+            Log.e("firebase",";local tem File created created"+localFle.toString());
 
- */
-
-public static List<VideoAdapter2> getmUploads(){
-
-    for(int i=0;i<mUploads.size();i++) {
-        if (mUploads.get(i) != null) {
-            uploads.add(mUploads.get(i));
         }
-    }
-    return uploads;
+    }).addOnFailureListener(new OnFailureListener() {
+        @Override
+        public void onFailure(@NonNull Exception e) {
+            Log.e("firebase",";local tem file not created created"+e.toString());
+
+        }
+    });
+
+
 }
+
+    public static List<VideoAdapter2> getmUploads(){
+
+        for(int i=0;i<mUploads.size();i++) {
+            if (mUploads.get(i) != null) {
+                uploads.add(mUploads.get(i));
+            }
+        }
+        return uploads;
+    }
 }
