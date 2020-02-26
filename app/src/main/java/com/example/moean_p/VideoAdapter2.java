@@ -13,7 +13,7 @@ public class VideoAdapter2 {
 
     }
 
-    public VideoAdapter2(String name, String videoUrl) {
+    public VideoAdapter2( String videoUrl,String name) {
         if(name.trim().equals("")){
             name="بدون عنوان";
         }

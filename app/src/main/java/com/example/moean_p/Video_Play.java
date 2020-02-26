@@ -1,8 +1,10 @@
 package com.example.moean_p;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -33,7 +35,7 @@ public class Video_Play extends AppCompatActivity  {
 
     public static FileDownloadTask fileReferance;
 
-
+Uri uri;
 
 
 
@@ -54,7 +56,7 @@ public class Video_Play extends AppCompatActivity  {
 
         for(int i=0;i<Videos.mUploads.size();i++){
             mUploadss.add(Videos.mUploads.get(i));
-            paths.add(Videos.mUploads.get(i).getVideoUrl());
+            //paths.add(Videos.mUploads.get(i).getVideoUrl());
         }
 
 
@@ -66,19 +68,13 @@ public class Video_Play extends AppCompatActivity  {
 
        videoView.setMediaController(mediaController);
        //Uri uri=Uri.fromFile(Videos.mUploads.get(Videos.position1).);
-       videoView.setVideoURI(Uri.parse(UploadVideo.videoUrl.toString()));
+videoView.setVideoURI(Uri.parse(UploadVideo.videoUrl.toString()));
+        videoView.setVideoURI(Videos.videoURi);
+
+
 
        videoView.requestFocus();
        videoView.start();
     }
-
-    public void File(){
-
-fileReferance=UploadVideo.storageReference.getFile(Uri.parse("uploads"));
-File filepaths=new File("txt");
-
-
-    }
-
 
 }

@@ -1,6 +1,7 @@
 package com.example.moean_p;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -54,13 +55,16 @@ public class Videos extends AppCompatActivity implements VideoAdapter.onItemClic
     NavigationView navigationView;
     ActionBarDrawerToggle toggle;
     Intent intent2;
-    VideoView videoView;
+    static VideoView videoView;
     public static VideoAdapter2 upload;
 public static int position1;
+
+public static List<StorageReference>lisofref=new ArrayList<>();
 
     BottomNavigationView bottomNavigationView;
 
     File directory;
+    public static Uri videoURi;
 
     private static final String TAG = "Videos";
 
@@ -73,6 +77,9 @@ public static int position1;
     private RecyclerView recycleView;
 
     public static FirebaseStorage storage;
+
+
+    public static Uri videoURI;
 
 
     private DatabaseReference databaseReference;
@@ -89,7 +96,6 @@ public static int position1;
         setSupportActionBar(toolbar);
 
 
-        directory=new File("/mnt");
 
         //directory=new File("/storage");
 
@@ -202,6 +208,8 @@ public static int position1;
 
 
 
+
+
     public void profile() {
 
         intent2 = new Intent(this, AdvisorProfile.class);
@@ -243,6 +251,13 @@ public static int position1;
     @Override
     public void onItemClick(int position) {
 
+
+        VideoAdapter2 selectedItem=mUploads.get(position);
+        StorageReference VideoRef=storage.getReferenceFromUrl(selectedItem.getVideoUrl());
+
+        videoURi=Uri.parse(mUploads.get(position).getVideoUrl());
+        lisofref.add(VideoRef);
+
         position1=position;
         Intent intent=new Intent(this,Video_Play.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -269,14 +284,24 @@ public static int position1;
 
         VideoAdapter2 selectedItem=mUploads.get(position);
         final String selectedKey=selectedItem.getmKey();
-        StorageReference VideoRef=storage.getReferenceFromUrl(selectedItem.getVideoUrl());
+        String selectedpath=selectedItem.getVideoUrl();
+        String uri=selectedItem.getVideoUrl();
+        StorageReference VideoRef=storage.getReferenceFromUrl(selectedpath);
         VideoRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 databaseReference.child(selectedKey).removeValue();
                 Toast.makeText(Videos.this, "Item Deleted", Toast.LENGTH_SHORT).show();
             }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                databaseReference.child(selectedKey).removeValue();
+                Toast.makeText(Videos.this, "Item Deleted", Toast.LENGTH_SHORT).show();
+            }
         });
+
+
 
 
     }

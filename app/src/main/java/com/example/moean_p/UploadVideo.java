@@ -49,7 +49,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 
 public class UploadVideo extends AppCompatActivity {
@@ -66,10 +68,11 @@ public class UploadVideo extends AppCompatActivity {
     private DatabaseReference databaseReference;
     public static StorageTask mUploadTask;
     public static StorageReference fileReferance;
+    public static List<Uri> listofvideos=new ArrayList<>();
     Intent intent1;
     Button previous;
 
-    private static final int REQUEST_TAKE_GALLERY_VIDEO = 3;
+    public static final int REQUEST_TAKE_GALLERY_VIDEO = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,7 +162,6 @@ public class UploadVideo extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_TAKE_GALLERY_VIDEO && resultCode == RESULT_OK
                 && data.getData() != null && data.getData() != null) {
-          //  Uri uri=getRealPathFromURI();
             videoUrl = data.getData();
             try {
 
@@ -167,6 +169,8 @@ public class UploadVideo extends AppCompatActivity {
                 e.printStackTrace();
             }
             video.setVideoURI(videoUrl);
+            //listofvideos.add(videoUrl);
+
 
 
          //  String path = getRealPathFromURI(this,videoUrl);
@@ -291,6 +295,7 @@ public class UploadVideo extends AppCompatActivity {
         } else {
             Toast.makeText(this, "No file selected", Toast.LENGTH_LONG).show();
         }
+
 
     }
 
